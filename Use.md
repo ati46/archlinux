@@ -24,6 +24,15 @@
     - 先初始化
     - git remote add origin git_address
 
+- 删除全局配置项
+    - 查看git所有配置
+        - git config --list
+    - 删除项
+        - 命令
+            git config --global --unset user.name
+        - 编辑
+            git config --global --edit
+
 ## 目录记录
 - i3 ~/.config
 - polybar ~/.config

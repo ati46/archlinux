@@ -64,3 +64,4 @@ exec gsettings set org.gnome.desktop.interface scaling-factor 1 &
 exec i3 -V >> ~/.config/i3/log/i3log-$(date + '%F-%k-%M-%S') 2>&1
 #exec i3 -V >> ~/i3log-$(date +'%F-%k-%M-%S') 2>&1
 xrdb -merge ~/.Xresources
+oneko -dog & # 桌面显示一只宠物，追逐鼠标

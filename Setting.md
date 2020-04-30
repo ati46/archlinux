@@ -156,53 +156,73 @@
     sudo pacman -S xfce4 xfce4-goodies
 ```
 
+## xrandr 多屏幕设置
+``` shell
+    //终端输入 xrandr 查看显示信息
+    $ xrandr                                                                                                                    
+        Screen 0: minimum 320 x 200, current 5616 x 1824, maximum 16384 x 16384
+        eDP-1 connected primary 2736x1824+0+0 (normal left inverted right x axis y axis) 260mm x 173mm
+        2736x1824     59.96*+
+        DP-1 connected 2880x1620+2736+0 (normal left inverted right x axis y axis) 436mm x 245mm
+        1920x1080     60.00*+  59.94  
+        1680x1050     59.88  
+        1600x900      60.00  
+        1280x1024     75.02    60.02  
+        1440x900      59.90  
+        1280x720      60.00    59.94  
+        1024x768      75.03    70.07    60.00  
+        800x600       72.19    75.00    60.32  
+        720x480       60.00    59.94  
+        640x480       75.00    72.81    60.00    59.94  
+        720x400       70.08  
+        DP-2 disconnected (normal left inverted right x axis y axis)
 
-xrandr --output eDP-1 --below DP-1 --output DP-1 --scale 1.5x1.5
+    //eDP-1 笔记本屏幕
+    //DP-1 扩展屏幕
+    //设置笔记本屏幕在扩展屏幕的左边
+    // --scale 缩放比例 
+    //eDP-1 --scale 0.99999x0.99999 主屏幕缩放0.9999 是因为xorg 双屏幕下鼠标会发生抖动，所以使用此命令来解决
+    //DP-1 --scale 1.5x1.5 扩展屏幕1.5是因为 笔记本屏幕是高分屏DPI放大后，扩展屏幕也会放大，所以需要再次缩小
+    //eDP-1 --left-of DP-1 笔记本屏幕在扩展屏幕的左边
+    xrandr --auto --output eDP-1 --scale 0.99999x0.99999 --primary --output DP-1 --scale 1.5x1.5 --output eDP-1 --left-of DP-1
+    
+    //设置笔记本屏幕在扩展屏幕的下面，由于扩展屏幕的缩小的原因导致上下屏幕设置后会有部分屏幕重叠，需要计算显示区域
+    xrandr --output eDP-1 --auto --pos 0x1728 --scale 0.99999x0.99999 --primary --output DP-1 --auto --pos 0x0 --scale 1.6x1.6
+    //计算方式 -- 直接摘录某大神的 懒得自己话了
+        基本上，--pos指定屏幕在虚拟屏幕空间中的左上角的位置。虚拟屏幕是覆盖整个物理屏幕的屏幕。这是指定屏幕位置的非常通用的方法
+        (virtual screen coordinates)
+            0        1366                 1366+1920
+          0           A-----------------------
+                      |                      |
+                      |                      |
+                      |                      |
+         x? B---------|         HDMI         |
+            |         |                      |
+            |  LVDS   |       1920x1080      |
+            |1366x768 |                      |
+        1080 ----------------------------------
+        并且您需要在--pos选项中使用A和B的坐标。 x可以很容易地将其求解为1080-768 = 312，因此A为（1366,0），而B为（0,312）。
+        因此，合适的--pos选项对于HDMI是--pos 1366x0，对于LVDS是--pos 0,312。您不必再指定虚拟屏幕的大小，它会自动调整大小。
+        请注意，这--pos可能会被滥用，例如在两个屏幕之间造成孔洞或重叠。大多数（全部？）WM将无法解决该问题
 
-xrandr --auto --output eDP-1 --scale 0.99999x0.99999 --primary --output DP-1 --scale 1.6x1.6 --pos 0x-648 --output eDP-1 --below DP-1
+    //如果不是高分屏只需要使用以下命令即可实现上下屏幕
+    xrandr --output eDP-1 --below DP-1 --output DP-1 
+```
+## 自动锁屏
+``` shell
+    //没有操作5分钟后自动锁屏， 锁屏使用i3lock，锁屏前一分钟通过dunst弹出提示语
+    xautolock -time 5 -locker 'i3lock -i ~/Pictures/lock.png' -notify 60 -notifier 'notify-send "一分钟后锁屏"'
+```
 
-
-xrandr --auto --output eDP-1 --scale 0.99999x0.99999 --primary --output DP-1 --scale 1.5x1.5 --output eDP-1 --left-of DP-1
-//设置主屏幕0.999999 可以解决鼠标抖动的问题
-xrandr --output eDP-1 --auto --pos 0x1728 --scale 0.99999x0.99999 --primary --output DP-1 --auto --pos 0x0 --scale 1.6x1.6
-
-基本上，--pos指定屏幕在虚拟屏幕空间中的左上角的位置。虚拟屏幕是覆盖整个物理屏幕的屏幕。这是指定屏幕位置的非常通用的方法
-
-(virtual screen coordinates)
-     0       1366                 1366+1920
-
-   0           A-----------------------
-               |                      |
-               |                      |
-               |                      |
-  x? B---------|         HDMI         |
-     |         |                      |
-     |  LVDS   |       1920x1080      |
-     |1366x768 |                      |
-1080 ----------------------------------
-
-并且您需要在--pos选项中使用A和B的坐标。 x可以很容易地将其求解为1080-768 = 312，因此A为（1366,0），而B为（0,312）。
-
-因此，合适的--pos选项对于HDMI是--pos 1366x0，对于LVDS是--pos 0,312。您不必再指定虚拟屏幕的大小，它会自动调整大小。
-
-请注意，这--pos可能会被滥用，例如在两个屏幕之间造成孔洞或重叠。大多数（全部？）WM将无法解决该问题
-
-
-i3lock
-xautolock
-xautolock -time 5 -locker 'i3lock -i ~/Pictures/lock.png' -notify 60 -notifier 'notify-send "一分钟后锁屏"'
-
-xautolock -time 1 -locker 'i3lock -i ~/Pictures/lock.png' -notify 5 -notifier 'notify-send \"Screen is to be locked in 5 secs\" 4'
-
-## 休眠挂起
-编辑 /etc/systemd/logind.conf
-
-
-事件处理程序	描述	默认动作
-HandlePowerKey	按下电源键后的动作	poweroff
-HandleSuspendKey	按下挂起键后的动作	suspend
-HandleHibernateKey	按下休眠键后触发的动作	hibernate
-HandleLidSwitch	笔记本翻盖后触发的动作，除了下面的情况	suspend
-HandleLidSwitchDocked	如果笔记本放到了扩展坞或连接了多个显示器时，笔记本翻盖合上时触发的动作	ignore
-
-修改后需要运行 systemctl restart systemd-logind 使上述更改生效。
+## 休眠挂起 --更改电源键为挂起操作
+``` shell
+    编辑 /etc/systemd/logind.conf 修改对应的按钮事件
+        事件处理程序                描述                                                                    默认动作
+        HandlePowerKey          按下电源键后的动作                                                          poweroff
+        HandleSuspendKey        按下挂起键后的动作                                                          suspend
+        HandleHibernateKey      按下休眠键后触发的动作                                                      hibernate
+        HandleLidSwitch         笔记本翻盖后触发的动作，除了下面的情况	                                    suspend
+        HandleLidSwitchDocked   如果笔记本放到了扩展坞或连接了多个显示器时，笔记本翻盖合上时触发的动作	    ignore
+        
+    修改后需要运行 systemctl restart systemd-logind 使上述更改生效。
+```
