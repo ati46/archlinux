@@ -1,0 +1,264 @@
+## Variables
+set $run exec --no-startup-id
+set $mod Mod4
+
+set $ws1 "1:Home"
+set $ws2 "2:Browser"
+set $ws3 "3:Coding"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+floating_modifier $mod
+
+# xrandr
+#exec --no-startup-id xrandr --output HDMI1 1920*1080 --right-of eDP-1
+
+# 切换任务栏隐藏和显示
+#bindsym $mod+m bar mode toggle
+
+#---bar---
+#bar {
+##    status_command i3status -c ~/.config/i3/i3status.conf
+##    status_command i3blocks -c ~/.config/i3/i3blocks.conf
+#
+#    # position top
+#    mode hide
+#    #workspace_buttons yes
+#    #output eDP1
+#    #tray_output primary
+#    #tray_padding 0
+#    #separator_symbol "|"
+#
+#    colors {
+#    background #285477
+#    statusline #dedede
+#    separator #2d2d2d
+#    focused_workspace #636e88 #285de7 #dedfdg
+#    active_workspace #556677 #234567 #56ef67
+#    inactive_workspace #636d72 #2d2d2d #dedede
+#    urgent_workspace #ffffff #900000 #d23d32
+#    }
+#
+##height 30
+#}
+
+## Autoruns
+$run "nitrogen --restore"
+$run "dunst ~/.config/dunst/dunstrc"
+$run "compton -b --config ~/.config/compton/config"
+exec_always --no-startup-id ~/.config/i3/launch.sh
+
+
+## Global config
+font pango:Iosevka Medium 10
+
+#                       class   border  backgr. text
+client.focused              #bf616a #2f343f #d8dee8 #bf616a #d8dee8
+client.focused_inactive     #2f343f #2f343f #d8dee8 #2f343f #2f343f
+client.unfocused            #2f343f #2f343f #d8dee8 #2f343f #2f343f
+client.urgent               #2f343f #2f343f #d8dee8 #2f343f #2f343f
+client.placeholder          #2f343f #2f343f #d8dee8 #2f343f #2f343f
+client.background           #2f343f
+
+# default_border
+new_window pixel 0
+new_float pixel 3
+
+smart_borders on
+
+gaps outer 0
+gaps inner 5
+
+## 特殊窗口状态处理
+## Window settings
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_role="dialog"] floating enable
+for_window [window_role="menu"] floating enable
+for_window [window_role="xfce4-appfinder"] floating enable
+for_window [window_role="Preferences"] floating enable
+for_window [instance="lxappearance"] floating enable
+for_window [instance="pavucontrol"] floating enable
+for_window [instance="nitrogen"] floating enable
+for_window [instance="xarchiver"] floating enable
+for_window [class="Pcmanfm"] floating enable
+for_window [class="Thunar"] floating enable
+for_window [title="Выгрузка файла"] resize set 720 px 500 px
+for_window [title="Выгрузка файла"] floating enable move right 330 px, move down 40 px
+
+## Keybindings
+#bindsym $mod+d $run rofi -show drun
+bindsym $mod+d $run rofi -lines 12 -padding 18 -width 60 -location 0 -show drun -sidebar-mode -columns 3 #-font 'Noto Sans 8'
+bindsym $mod+v $run rofi -modi "clipboard:greenclip print" -show clipboard
+#bindsym $mod+t $run urxvt -sh 40
+bindsym $mod+t $run xfce4-terminal
+#bindsym $mod+Return $run xfce4-terminal
+bindsym $mod+Return $run urxvt -sh 40
+#bindsym $mod+i $run chromium
+bindsym $mod+e $run Thunar
+bindsym $mod+F2 $run xfce4-appfinder
+# 调节亮度
+bindsym XF86MonBrightnessUp $run ~/.config/i3/script/brightness_up.sh
+bindsym XF86MonBrightnessDown $run ~/.config/i3/script/brightness_down.sh
+
+bindsym mod1+t $run urxvt -sh 40
+bindsym mod1+i $run chromium
+bindsym mod1+e $run pcmanfm
+bindsym mod1+F2 $run xfce4-appfinder
+#bindsym mod1+Return $run xfce4-terminal
+
+# 切换工作空间
+bindsym $mod+Tab workspace next
+bindsym mod1+Tab workspace prev
+
+# 隐藏窗口 | show window(minus is "-" and plus is "+".)
+bindsym $mod+minus scratchpad show
+bindsym $mod+Shift+minus move scratchpadrestart
+
+bindsym $mod+Shift+Tab "mark --add _; [con_mark=f] floating disable, border none, mark --add --toggle _; [con_mark=_] floating enable, border pixel 4; mark --add --toggle f;"
+
+bindsym $mod+s sticky toggle
+
+bindsym XF86AudioMute        exec --no-startup-id pactl set-sink-mute   0 toggle
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+
+#bindsym $mod+F1 $run scrot 'SCR-%H:%M:%S.png' -z -e 'mv $f ~/Pictures/'
+bindsym F1 $run flameshot gui
+#bindsym Print $run deepin-screenshot -n
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wife.jpg
+
+# 关闭当前窗口
+bindsym $mod+Shift+q kill
+# 当前窗口全屏
+bindsym $mod+f fullscreen toggle
+# 当前窗口浮动
+bindsym $mod+Shift+space floating toggle
+# 窗口平铺模式-堆叠式
+bindsym $mod+i layout stacking
+# 窗口平铺模式-标签式
+bindsym $mod+o layout tabbed
+# 窗口平铺模式-在垂直平铺和水平平铺之间来回切换
+bindsym $mod+p layout toggle split
+# 分割窗口-水平分割
+bindsym $mod+h split h
+# 分割窗口-垂直分割
+bindsym $mod+g split v
+
+
+bindsym $mod+a focus parent
+bindsym $mod+Shift+a focus child
+# 在平鋪/浮動窗口之間切換焦點
+#bindsym $mod+space fous mode_toggle
+
+# 调整窗口边框风格-无边框和标题栏
+bindsym $mod+u border none
+# 调整窗口边框风格-有边框和标题栏
+bindsym $mod+n border normal
+# 调整窗口边框风格-1像素边框
+# bindsym $mod+o border pixel 1
+# 调整窗口边框风格-可在上面三种风格来回切换
+bindsym $mod+b border toggle
+
+# 切换焦点窗口 Super+h或j或k或l 或者 Super+上下左右箭头
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym mod1+h focus left
+bindsym mod1+j focus down
+bindsym mod1+k focus up
+bindsym mod1+l focus right
+
+# 移动窗口位置
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+
+
+# screen off | sleep | shutdown(time unit: seconds) 秒
+#exec --no-startup-id xset dpms 300 1357 6789
+$run xset dpms 360 600
+bindsym $mod+mod1+Ctrl+Shift+D  xset -dpms
+
+# 重新加载配置文件
+bindsym $mod+Shift+r reload
+# 重启i3
+bindsym $mod+Shift+s restart
+
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# i3lock
+ mode "i3lock: Return to lock/Escape to Cancel" {
+            bindsym Return mode "default" exec i3lock -i ~/Pictures/surfacepro7.png
+            bindsym Escape mode "default"
+    }
+
+bindsym Ctrl+mod1+l mode "i3lock: Return to lock/Escape to Cancel"
+
+## App shortcuts
+#bindsym $mod+Shift+F1 $run chromium --enable-experimental-canvas-features --disable-software-rasterizer --disable-speech-api --disable-breakpad --enable-native-gpu-memory-buffers --enable-features="CheckerImaging" --disable-logging --disable-metrics-system --disable-java --disable-webgl
+#bindsym $mod+Shift+F2 $run pcmanfm
+#bindsym $mod+Shift+F3 $run sublime
+#bindsym $mod+Shift+F4 $run telegram-desktop
+
+
+bindsym $mod+r mode "resize"
+## Resize
+mode "resize" {
+#bindsym j resize shrink width 10 px or 10 ppt
+#bindsym k resize grow height 10 px or 10 ppt
+#bindsym l resize shrink height 10 px or 10 ppt
+#bindsym semicolon resize grow width 10 px or 10 ppt
+
+        bindsym Left resize shrink width 3 px or 3 ppt
+        bindsym Down resize grow height 3 px or 3 ppt
+        bindsym Up resize shrink height 3 px or 3 ppt
+        bindsym Right resize grow width 3 px or 3 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+#===power manager===
+set $mode_system select: lock(L) exit(E) reboot(R) poweroff(O) cancel(Esc)
+bindsym Ctrl+mod1+q mode "$mode_system"
+mode "$mode_system" {
+#bindsym l exec --no-startup-id i3lock -c '#000000', mode "default"
+    bindsym l exec --no-startup-id i3lock && systemctl suspend, mode "default"
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym o exec --no-startup-id systemctl poweroff, mode "default"
+    bindsym Escape mode "default"
+}

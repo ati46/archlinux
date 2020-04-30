@@ -1,0 +1,176 @@
+## Variables
+set $run exec --no-startup-id
+set $mod Mod4
+set $ws1 "1:Home"
+set $ws2 "2:Browser"
+set $ws3 "3:Coding"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+floating_modifier $mod
+
+#set_from_resource $base00 color0  #000000
+#set_from_resource $base01 color18 #000000
+#set_from_resource $base02 color19 #000000
+#set_from_resource $base03 color8  #000000
+#set_from_resource $base04 color20 #000000
+#set_from_resource $base05 color7  #000000
+#set_from_resource $base06 color21 #000000
+#set_from_resource $base07 color15 #000000
+#set_from_resource $base08 color1  #000000
+#set_from_resource $base09 color16 #000000
+#set_from_resource $base0A color11 #000000
+#set_from_resource $base0B color2  #000000
+#set_from_resource $base0C color14 #000000
+#set_from_resource $base0D color12 #000000
+#set_from_resource $base0E color5  #000000
+#set_from_resource $base0F color17 #000000
+
+
+## Autoruns
+$run "nitrogen --restore"
+$run "dunst ~/.config/dunst/dunstrc"
+$run "compton -b --config ~/.config/compton/config"
+$run "xfce4-clipman"
+exec_always --no-startup-id ~/.config/i3/launch.sh
+
+
+## Global config
+font pango:Iosevka Medium 10
+
+#                       class   border  backgr. text
+client.focused          $base05 $base05 $base00 $base05
+client.focused_inactive $base02 $base02 $base05 $base02
+client.unfocused        $base02 $base02 $base05 $base00
+client.urgent           $base01 $base01 $base05 $base00
+
+new_window pixel 0
+new_float pixel 3
+
+smart_borders on
+
+gaps outer 0
+gaps inner 5
+
+
+## Window settings
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_role="dialog"] floating enable
+for_window [window_role="menu"] floating enable
+for_window [window_role="Preferences"] floating enable
+for_window [instance="lxappearance"] floating enable
+for_window [instance="pavucontrol"] floating enable
+for_window [instance="nitrogen"] floating enable
+for_window [instance="xarchiver"] floating enable
+for_window [class="Pcmanfm"] floating enable
+for_window [title="Выгрузка файла"] resize set 720 px 500 px
+for_window [title="Выгрузка файла"] floating enable move right 330 px, move down 40 px
+
+## Keybindings
+#bindsym $mod+d $run rofi -show drun
+bindsym $mod+d $run rofi -lines 12 -padding 18 -width 60 -location 0 -show drun -sidebar-mode -columns 3 #-font 'Noto Sans 8'
+bindsym $mod+v $run rofi -modi "clipboard:greenclip print" -show clipboard
+bindsym $mod+t $run urxvt
+bindsym $mod+Return $run xfce4-terminal
+#bindsym $mod+i $run chromium
+bindsym $mod+e $run thunar
+bindsym $mod+alt+l $run i3lock -i ~/picture/feh.jpeg
+$run xset dpms 300
+bindsym $mod+F2 $run xfce4-appfinder
+
+bindsym $mod+minus scratchpad show
+bindsym $mod+Shift+minus move scratchpad
+
+bindsym $mod+Shift+Tab "mark --add _; [con_mark=f] floating disable, border none, mark --add --toggle _; [con_mark=_] floating enable, border pixel 4; mark --add --toggle f;"
+
+bindsym $mod+s sticky toggle
+
+bindsym XF86AudioMute        exec --no-startup-id pactl set-sink-mute   0 toggle
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+
+#bindsym $mod+F1 $run scrot 'SCR-%H:%M:%S.png' -z -e 'mv $f ~/Pictures/'
+bindsym F1 $run flameshot gui
+#bindsym Print $run deepin-screenshot -n
+exec_always --no-startup-id feh --bg-scale "/home/lwt/Picture/wife.jpg"
+
+bindsym $mod+Shift+q kill
+bindsym $mod+f fullscreen toggle
+bindsym $mod+o layout tabbed
+bindsym $mod+p layout toggle split
+bindsym $mod+a focus parent
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space fous mode_toggle
+bindsym $mod+h split h
+bindsym $mod+g split v
+
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+# reload the configuration file
+#bindsym $mod+Shift+r reload
+
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+r mode "resize"
+
+
+## App shortcuts
+bindsym $mod+Shift+F1 $run chromium --enable-experimental-canvas-features --disable-software-rasterizer --disable-speech-api --disable-breakpad --enable-native-gpu-memory-buffers --enable-features="CheckerImaging" --disable-logging --disable-metrics-system --disable-java --disable-webgl
+bindsym $mod+Shift+F2 $run pcmanfm
+bindsym $mod+Shift+F3 $run sublime
+bindsym $mod+Shift+F4 $run telegram-desktop
+
+
+## Resize
+mode "resize" {
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        bindsym Left resize shrink width 3 px or 3 ppt
+        bindsym Down resize grow height 3 px or 3 ppt
+        bindsym Up resize shrink height 3 px or 3 ppt
+        bindsym Right resize grow width 3 px or 3 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
