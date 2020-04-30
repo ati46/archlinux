@@ -222,7 +222,7 @@
         HandleSuspendKey        按下挂起键后的动作                                                          suspend
         HandleHibernateKey      按下休眠键后触发的动作                                                      hibernate
         HandleLidSwitch         笔记本翻盖后触发的动作，除了下面的情况	                                    suspend
-        HandleLidSwitchDocked   如果笔记本放到了扩展坞或连接了多个显示器时，笔记本翻盖合上时触发的动作	    ignore
-        
+        HandleLidSwitchDocked   如果笔记本放到了扩展坞或连接了多个显示器时，笔记本翻盖合上时触发的动作      ignore
+
     修改后需要运行 systemctl restart systemd-logind 使上述更改生效。
 ```
